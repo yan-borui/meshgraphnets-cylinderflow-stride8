@@ -1,3 +1,23 @@
+# CylinderFlow stride-8: NVIDIA MeshGraphNets adaptation
+
+This independent private copy preserves NVIDIA Modulus `v0.1.0`, commit `307e446d43741d3c9db2432483f585da175ba3e4`, and its Apache-2.0 license. Use [installation and commands](CYLINDERFLOW.md), [the common data/evaluation contract](DATA_CONTRACT.md), and [machine-readable acceptance](ACCEPTANCE.json).
+
+The adapter uses NVIDIA's original 15-block MeshGraphNet with hidden width 128 (2,332,419 parameters). It learns dt=0.08 transitions from scratch: current velocity and four node-type indicators are the six node inputs; directed displacement/length are three edge inputs; outputs are normalized velocity increments and next-frame pressure. Only velocity is recurrent state. All Train trajectories supply 64 adjacent pairs in frames 0..64. The budget is 25 epochs × 64,000 pairs, batch 1, Adam 1e-4, MSE, exponential LR multiplier 0.9999991 per update and normal-node velocity input noise 0.02. Actual updates and exposure are retained in structured logs.
+
+After installation and preparation, with `DATA` and `MANIFEST` set as in the guide:
+
+```bash
+git remote add upstream https://github.com/NVIDIA/modulus.git
+python -m cylinderflow train --dataset "$DATA" --manifest "$MANIFEST" --prepared runs/prepared --device cuda --output-dir runs/train
+python -m cylinderflow resume --dataset "$DATA" --manifest "$MANIFEST" --prepared runs/prepared --checkpoint runs/train/last.pt --device cuda --output-dir runs/train
+```
+
+Use train for a new run or resume for an existing run. The model implementation remains unchanged; independent dataset, training, recovery, physical evaluation and rendering are in `cylinderflow/`. No original Modulus training/data entry point is imported. The new path does not require Apex, Hydra, W&B, TensorFlow, a host-specific CUDA library directory, or another private repository.
+
+CPU acceptance uses the full network, exact resume, 64-step prediction and real media. Target GPU/mixed-precision/maximum-mesh acceptance is provided as a separate explicit command; no formal long training was launched. Original upstream documentation follows for provenance.
+
+---
+
 # Modulus (Beta)
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)

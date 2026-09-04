@@ -1,0 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+--find-links https://data.dgl.ai/wheels/cu118/repo.html
+-r requirements-cylinderflow.txt
+torch==2.4.0+cu118
+dgl==1.1.3+cu118

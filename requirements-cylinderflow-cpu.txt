@@ -1,0 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r requirements-cylinderflow.txt
+torch==2.4.0+cpu
+dgl==1.1.3

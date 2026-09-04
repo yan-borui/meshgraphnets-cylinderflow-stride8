@@ -164,3 +164,16 @@ nsight-systems*
 # Hydra
 outputs/
 multirun/
+
+# CylinderFlow local inputs and runtime artifacts
+/runs/
+/data/
+/.venv*/
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.npz
+*.npy
+/AGENTS.md
+/.codex/
