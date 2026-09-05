@@ -1,5 +1,7 @@
 # CylinderFlow stride-8: NVIDIA MeshGraphNets adaptation
 
+Use [the matched performance benchmark](PERFORMANCE.md) for cross-method inference speed and GPU-memory cost after checkpoint selection.
+
 This independent private copy preserves NVIDIA Modulus `v0.1.0`, commit `307e446d43741d3c9db2432483f585da175ba3e4`, and its Apache-2.0 license. Use [installation and commands](CYLINDERFLOW.md), [the common data/evaluation contract](DATA_CONTRACT.md), and [current alignment verification](ALIGNMENT_VERIFICATION.json) and [prior prefix65 acceptance](ACCEPTANCE.json).
 
 The adapter uses NVIDIA's original 15-block MeshGraphNet with hidden width 128 (2,332,419 parameters). It learns dt=0.08 transitions from scratch: current velocity and four node-type indicators are the six node inputs; directed displacement/length are three edge inputs; outputs are normalized velocity increments and next-frame pressure. Only velocity is recurrent state. All Train trajectories supply 74 adjacent pairs in frames 0..74. The budget is 25 epochs × 74,000 pairs, batch 1, Adam 1e-4, MSE, exponential LR multiplier 0.9999991 per update and normal-node velocity input noise 0.02. Actual updates and exposure are retained in structured logs.
