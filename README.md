@@ -1,5 +1,8 @@
 # CylinderFlow stride-8: NVIDIA MeshGraphNets adaptation
 
+The optional [four-GPU DDP recipe](FOUR_GPU.md) uses global batch 4 and preserves
+MGN's learning-rate curve by global example count. Original single-device commands remain below.
+
 Use [the matched performance benchmark](PERFORMANCE.md) for cross-method inference speed and GPU-memory cost after checkpoint selection.
 
 This independent private copy preserves NVIDIA Modulus `v0.1.0`, commit `307e446d43741d3c9db2432483f585da175ba3e4`, and its Apache-2.0 license. Use [installation and commands](CYLINDERFLOW.md), [the common data/evaluation contract](DATA_CONTRACT.md), and [current alignment verification](ALIGNMENT_VERIFICATION.json) and [prior prefix65 acceptance](ACCEPTANCE.json).
