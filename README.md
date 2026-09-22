@@ -1,3 +1,7 @@
+# 前65帧重训
+
+本分支新增[前65帧、25轮四卡训练入口](PREFIX65.md)。
+
 # CylinderFlow stride-8: NVIDIA MeshGraphNets adaptation
 
 **历史 checkpoint UV 误差表：**[逐点 Validation100、断点续跑与图片交接](TRAINING_CURVE.md)。
