@@ -32,8 +32,16 @@ python training_curve.py --run-dir "$RUN" --config "$CONFIG" \
 
 **回传OUT/pages.json列出的全部table_XX.png**。每页最多15行，只有训练投入和UV相对RMSE两列。
 每完成一个checkpoint就更新图片；“—”代表缺失、失败或尚未完成，具体原因见status.json。
-保留OUT用于续跑；精确分数在status.json，CSV和PNG展示6位有效数字。脚本不保存大体积流场预测，
-不汇总GPU时间或其他物理指标；底层原评价器计算后仅提取UV分数。
+保留OUT用于续跑；精确分数在status.json，table.csv和PNG展示6位有效数字。
+MGN另输出history.csv，保留精确UV分数、真实累计样本数、checkpoint累计耗时、训练GPU数及
+累计GPU-hours。累计耗时直接取checkpoint的elapsed_seconds，GPU数来自保存的四卡训练状态，
+GPU-hours为二者相乘再除以3600，包含该运行已计入的验证与保存时间。缺少的记录留空。
+训练历史的时间与本次重评耗时分别记录，history.csv中的时间对应原训练进度。
+底层评价器沿用既有UV指标，逐轨迹物理指标和流场由[PREFIX65.md](PREFIX65.md#论文结果回传)的
+所选权重评价入口生成。
+
+本次增加了checkpoint成本元数据。已有旧版曲线输出保留；首次使用新版本请指定新的OUT，
+随后可按原命令续跑这个OUT。
 
 ## 合并四个方法
 

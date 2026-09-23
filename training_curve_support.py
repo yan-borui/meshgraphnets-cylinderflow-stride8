@@ -1,4 +1,4 @@
-"""Historical Validation100 UV tables; copied unchanged into standalone repos."""
+"""Historical Validation100 UV tables and saved MGN training costs."""
 
 from __future__ import annotations
 
@@ -62,11 +62,41 @@ def metadata(source: Path, method: str) -> dict:
             run = identifier.rsplit(":", 1)[0]
     if isinstance(update, bool) or int(update) != update or update < 0:
         raise ValueError("invalid checkpoint update")
+    training = {}
+    if method == "mgn":
+        settings = checkpoint["settings"]
+        ranks = checkpoint.get("rank_states", [])
+        world_size = settings.get("world_size")
+        gpu_count = (
+            world_size
+            if ranks
+            and len(ranks) == world_size
+            and all("peak_allocated_gib" in rank.get("memory", {}) for rank in ranks)
+            else None
+        )
+        elapsed = checkpoint.get("elapsed_seconds")
+        training = {
+            "training": {
+                "examples_seen": checkpoint.get("examples_seen"),
+                "elapsed_seconds": elapsed,
+                "training_world_size": world_size,
+                "training_gpu_count": gpu_count,
+                "allocated_gpu_hours": (
+                    elapsed * gpu_count / 3600
+                    if elapsed is not None and gpu_count is not None
+                    else None
+                ),
+                "dynamics_train_frames": checkpoint["config"].get(
+                    "dynamics_train_frames", 75
+                ),
+            }
+        }
     return {
         **stamp(source),
         "update": int(update),
         "checkpoint_id": identifier,
         "run_id": run,
+        **training,
     }
 
 
@@ -362,6 +392,38 @@ def render(reports: list[dict], output: Path) -> None:
     write_json(output / "pages.json", {"images_to_return": image_files})
 
 
+def write_training_history(report: dict, output: Path) -> None:
+    """Expose full-precision scores and checkpoint-recorded training costs."""
+    columns = (
+        "update",
+        "examples_seen",
+        "elapsed_seconds",
+        "training_world_size",
+        "training_gpu_count",
+        "allocated_gpu_hours",
+        "dynamics_train_frames",
+        "uv_relative_rmse",
+        "status",
+        "checkpoint_id",
+        "checkpoint_file",
+    )
+    with (output / "history.csv").open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=columns)
+        writer.writeheader()
+        for row in report["rows"]:
+            checkpoint = row["checkpoint"]
+            writer.writerow(
+                {
+                    "update": row["update"],
+                    **checkpoint.get("training", {}),
+                    "uv_relative_rmse": row["uv_relative_rmse"],
+                    "status": row["status"],
+                    "checkpoint_id": checkpoint["checkpoint_id"],
+                    "checkpoint_file": checkpoint["file"],
+                }
+            )
+
+
 def run_collection(args: argparse.Namespace, method: str) -> None:
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -492,6 +554,8 @@ def run_collection(args: argparse.Namespace, method: str) -> None:
 
     def refresh() -> None:
         write_json(output / "status.json", report)
+        if method == "mgn":
+            write_training_history(report, output)
         render([report], output)
 
     refresh()
