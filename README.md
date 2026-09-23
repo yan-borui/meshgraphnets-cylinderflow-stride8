@@ -1,5 +1,7 @@
 # CylinderFlow stride-8: NVIDIA MeshGraphNets adaptation
 
+**NAS 运行：**[启动入口与共享目录设置](NAS.md)。
+
 The optional [four-GPU DDP recipe](FOUR_GPU.md) uses global batch 4 and preserves
 MGN's learning-rate curve by global example count. Original single-device commands remain below.
 
