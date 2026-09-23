@@ -15,4 +15,3 @@ cd "$repo_root"
 export OMP_NUM_THREADS=2
 export PYTHONUNBUFFERED=1
 exec "$python_bin" -m cylinderflow.run_four_gpu "$@"
-

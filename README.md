@@ -1,5 +1,7 @@
 # 前65帧重训
 
+**NAS 运行：**[启动入口与共享目录设置](NAS.md)。
+
 本分支新增[前65帧、25轮四卡训练入口](PREFIX65.md)。
 
 # CylinderFlow stride-8: NVIDIA MeshGraphNets adaptation

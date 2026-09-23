@@ -24,10 +24,10 @@ python -m cylinderflow.run_four_gpu \
 训练完成后，以选中权重执行完整Validation100：
 
 ```bash
-python -m cylinderflow evaluate \\
-  --config cylinderflow_config_prefix65_4gpu.json \\
-  --dataset "$DATA" --manifest "$MANIFEST" --prepared "$PREPARED" \\
-  --checkpoint "$RESULT_ROOT/main/best.pt" --mode validation \\
+python -m cylinderflow evaluate \
+  --config cylinderflow_config_prefix65_4gpu.json \
+  --dataset "$DATA" --manifest "$MANIFEST" --prepared "$PREPARED" \
+  --checkpoint "$RESULT_ROOT/main/best.pt" --mode validation \
   --device cuda:0 --output-dir "$RESULT_ROOT/validation100"
 ```
 
