@@ -1,5 +1,9 @@
 # 前65帧动力学训练
 
+统一训练入口为 `bash scripts/train_prefix65_4gpu.sh train`，恢复使用 `resume`。
+先设置 `DATA`、`MANIFEST`、`PREPARED`、`RESULT_ROOT` 和 `CUDA_VISIBLE_DEVICES`。
+该入口使用本页既有四卡配置；RESULT_ROOT 使用新的独立目录。
+
 本分支固定25个epoch，使用每条Train轨迹的stored frames 0–64，监督64个相邻帧转移。
 原75帧数据文件和Train归一化继续复用。变化限定于动力学监督时间范围；归一化仍来自Train75帧。
 评价保持首帧预测未来64帧、既有Validation选优与完整Validation100。Test保持封存。
