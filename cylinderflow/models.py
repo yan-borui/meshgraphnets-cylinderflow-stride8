@@ -175,7 +175,7 @@ def mgn_inputs(sample, velocity, stats, device):
         device
     )
     classes = np.asarray(
-        [{0: 0, 4: 1, 2: 3}[int(label)] for label in sample["node_type"]]
+        [{0: 0, 4: 1, 5: 2, 2: 3, 6: 3}[int(label)] for label in sample["node_type"]]
     )
     onehot = F.one_hot(torch.as_tensor(classes, device=device), 4).float()
     normalized = (velocity - tensor(stats["velocity_mean"], device)) / tensor(

@@ -34,4 +34,7 @@ inference = ["onnxruntime==1.13.1"]
 version = {attr = "modulus.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["modulus", "modulus.*"] 
+include = ["modulus", "modulus.*", "megaflow_data*", "airfoil_data*"]
+
+[tool.setuptools.package-data]
+megaflow_data = ["splits.json"]
